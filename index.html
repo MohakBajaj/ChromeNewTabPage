@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to DevStation</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="shortcut icon" href="assets/logo.png" type="image/png">
+    </head>
+
+    <body class="fancy-scrollbar">
+        <div class="container" id="main">
+            <div id="Hero">
+                <div id="heroContent">
+                    <!-- Clock -->
+                    <div id="clock">
+                        <div id="time"></div>
+                        <div id="date"></div>
+                    </div>
+                    <!-- greetings -->
+                    <h1 id="greetings"></h1>
+                </div>
+                <div id="wrapper">
+                    <img src="assets/logo.png" alt="DevStation">
+                </div>
+            </div>
+            <div class="Box">
+                <div id="h3lit">
+                    <h3>Coding is Fun 👨‍💻💖</h3>
+                </div>
+                <div id="quick-links">
+                    <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="quick-link">
+                        <span>Gmail</span>
+                    </a>
+                    <a href="https://outlook.office.com/mail/inbox" target="_blank" class="quick-link">
+                        <span>Outlook</span>
+                    </a>
+                    <a href="https://mail.protonmail.com/login" target="_blank" class="quick-link">
+                        <span>ProtonMail</span>
+                    </a>
+                </div>
+            </div>
+            <div id="SearchBox">
+                <form action="https://www.google.com/search" method="GET">
+                    <input type="text" name="q" id="search" placeholder="Search Google">
+                    <button type="submit" value="Search" id="search-btn">Search</button>
+                    <!-- voice Search -->
+                    <button type="button" id="voice-btn">
+                        🎙️
+                    </button>
+                </form>
+            </div>
+            <div id="apps-container">
+                <a href="#" id="link">
+                    <div class="label">
+                        <span class="name">Stack Overflow</span>
+                        <span class="url" contenteditable="true">stackoverflow.com</span>
+                    </div>
+                </a>
+
+                <a href="#" id="link2">
+                    <div class="label">
+                        <span class="name">Github</span>
+                        <span class="url" contenteditable="true">github.com</span>
+                    </div>
+                </a>
+
+                <a href="https://chat.openai.com">
+                    <div class="label">
+                        <span class="name">Chat GPT</span>
+                        <span class="url" contenteditable="true">chat.openai.com</span>
+                    </div>
+                </a>
+
+                <a href="https://codepen.io">
+                    <div class="label">
+                        <span class="name">CodePen</span>
+                        <span class="url">codepen.io</span>
+                    </div>
+                </a>
+                <a href="https://youtube.com">
+                    <div class="label">
+                        <span class="name">YouTube</span>
+                        <span class="url">youtube.com</span>
+                    </div>
+                </a>
+                <a href="https://open.spotify.com">
+                    <div class="label">
+                        <span class="name">Spotify</span>
+                        <span class="url">spotify.com</span>
+                    </div>
+                </a>
+
+                <a href="https://netflix.com">
+                    <div class="label">
+                        <span class="name">Netflix</span>
+                        <span class="url">netflix.com</span>
+                    </div>
+                </a>
+
+
+                <a href="#">
+                    <div class="label">
+                        <span class="name">Xbox</span>
+                        <span class="url">xbox.com</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+        <div id="news-feed">
+            <h3>Daily.Dev News Feed</h3>
+            <iframe src="https://app.daily.dev/popular"></iframe>
+        </div>
+    </body>
+    <script>
+        const time = document.getElementById('time');
+        const date = document.getElementById('date');
+        const day = document.getElementById('day');
+        const greetings = document.getElementById('greetings');
+
+        const greetingsList = [
+            'Good Morning',
+            'Good Afternoon',
+            'Good Evening',
+            'Good Night'
+        ];
+
+        function getGreetings(hour) {
+            if (hour < 12) {
+                return greetingsList[0];
+            } else if (hour < 18) {
+                return greetingsList[1];
+            } else if (hour < 22) {
+                return greetingsList[2];
+            } else {
+                return greetingsList[3];
+            }
+        }
+
+        // Clock
+        // Use Date() to get the current time
+        function showTime() {
+            let today = new Date();
+            let hour = today.getHours();
+            let min = today.getMinutes();
+            let sec = today.getSeconds();
+            let todayDate = today.toDateString();
+
+            // Set AM or PM
+            const amPm = hour >= 12 ? 'PM' : 'AM';
+
+            // Output Greetings
+            greetings.innerHTML = `${getGreetings(hour)}`;
+
+            // 12hr Format
+            hour = hour % 12 || 12;
+
+            // Output Time
+            time.innerHTML = `${hour}<span>:</span>${min}<span>:</span>${sec} ${amPm}`;
+
+            // Output Date
+            date.innerHTML = `${todayDate}`;
+
+            // Run every second
+            setTimeout(showTime, 1000);
+        }
+        showTime();
+
+        // Voice Search
+        const voiceBtn = document.getElementById('voice-btn');
+        const searchBtn = document.getElementById('search-btn');
+        const search = document.getElementById('search');
+
+        voiceBtn.addEventListener('click', () => {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+
+            recognition.onstart = function () {
+                console.log('Voice is activated, you can speak to microphone');
+                voiceBtn.innerHTML = '...';
+            };
+
+            recognition.onresult = function (event) {
+                const current = event.resultIndex;
+
+                const transcript = event.results[current][0].transcript;
+                search.value = transcript;
+                recognition.stop();
+                voiceBtn.innerHTML = '🎙️';
+                console.log(transcript);
+                searchBtn.click();
+                search.value = '';
+            };
+
+            recognition.start();
+        });
+    </script>
+
+</html>
